@@ -28,6 +28,6 @@ def convert(arch_cru):
         new_name = file.split('.')[0] + '.o'
         print(new_name)
         type(file)
-        os.system('teqc -O.dec 30 +obs' + new_name + file)    
+        os.system('teqc -O.dec 30 +obs' + new_name + file)    #Este probablemente genere un error, lo que obtendra sera algo como 'teqc -O.dec 30 +obs nombre.oArchvivo.AS'. Debe habar un espacio entre el nombre de la observacion y el archivo original
 
 convert(arch_cru)    
