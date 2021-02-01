@@ -25,9 +25,9 @@ listar(cwd)
 
 def convert(arch_cru):
     for file in arch_cru:
-        new_name = file.split('.')[0] + '.o'
+        new_name = file.split('.')[0]+'.o'
         print(new_name)
-        type(file)
-        os.system('teqc -O.dec 30 +obs' + new_name + file)    
+        os.system('teqc -O.dec 30 +obs ' + new_name  + ' ' +  file)    
 
 convert(arch_cru)    
+
