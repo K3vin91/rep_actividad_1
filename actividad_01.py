@@ -6,7 +6,8 @@ Created on Sun Jan 31 02:16:12 2021
 """
 
 import os
-
+import statistics
+import math 
 
 arch_AS = []                               #Lista de archivos crudos
 arch_o = []                                #Lista de archivos .o
@@ -48,18 +49,49 @@ def extract(cwd):                                                    #Funcion pa
             lineas = f.readlines()[9:10]                             #variable para leer y asignar la linea de interes 
             for linea in lineas:                                     #bucle para iterar en cada linea del archivo
                 new_line = linea.strip().split(' ', 4)[0:4]          #variable a la que se le asigna la linea seleccionada, se le quita los espacios arriba y abajo, 
-                coord_x.append(new_line[0])                             #se separa usando los espacios un maximo de 4 veces y se selecciona los primeros 4 elementos de la lista
-                coord_y.append(new_line[1])
-                coord_z.append(new_line[3])
-                                              #Los tres comandos anteriores asignan cada coordenada a su respectiva lista
+                coord_x.append(float(new_line[0]))                             #se separa usando los espacios un maximo de 4 veces y se selecciona los primeros 4 elementos de la lista
+                coord_y.append(float(new_line[1]))
+                coord_z.append(float(new_line[3]))                   #Los tres comandos anteriores asignan cada coordenada a su respectiva lista y la convierte de cadenas a numeros 
+    x = statistics.mean(coord_x)
+    y = statistics.mean(coord_y)
+    z = statistics.mean(coord_z)                                     #Los tres comandos anteriores calculan el promedio de cada coordenada segun los valores de cada lista
+        
+    a = 6378137                         #Parametros para elipsoide WGS84
+    b = 6356752.314
+    
+    p = math.sqrt(x**2 + y**2)            #calculos de ecuasiones para el algoritmo de Bowring   
 
+    te = math.atan((z*a)/(p*b))
+
+    e2 = (a**2-b**2)/(a**2)
+
+    e_2 = (a**2-b**2)/(b**2)
+ 
+    lamd = math.atan(y/x)
+
+    phi = math.atan((z + e_2*b*math.sin(te)**3)/(p - e2*a*math.cos(te)**3))
+
+    n = a/math.sqrt(1 - e2*math.sin(phi)**2)
+
+    h = (p/math.cos(phi))-n
+    
+    geo_x = math.degrees(lamd)            #conversion de radianes a grados deimales   
+    geo_y = math.degrees(phi)
+    print('geo_x =', geo_x)
+    print('geo_y =', geo_y)    
+    print('h = ', h)
+
+    str_x = str(geo_x)                    #convertir floats a strings
+    str_y = str(geo_y)
+    str_z = str(h)
+    coords =[str_x, str_y, str_z]         #unir strings a lista
+    c =','.join(coords)                   #uniendo coordenadas en una sola cadena separada por comas
+    
+    with open('Coordenadas Geodesicas de Estacion de CURNO.csv', 'w') as archivo:  #creando archivo csv
+        archivo.write('Coordenada X, Coordenada Y, Coordenada Z\n')
+        archivo.write(c)
+     
 extract(cwd)
-    
-
-    
-    
-    
-
 
 
 
